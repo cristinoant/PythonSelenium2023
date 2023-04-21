@@ -1,4 +1,8 @@
 # Byte-compiled / optimized / DLL files
+#Ignorar los archivos de la carpeta Drivers
+drivers/
+.idea/
+
 __pycache__/
 *.py[cod]
 *$py.class
