@@ -2,6 +2,7 @@
 #Ignorar los archivos de la carpeta Drivers
 drivers/
 .idea/
+.vscode/
 
 __pycache__/
 *.py[cod]
