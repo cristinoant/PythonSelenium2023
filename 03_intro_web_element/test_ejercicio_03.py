@@ -15,7 +15,7 @@ class TestingLaboratorioQAMinds:
         self.driver.maximize_window()
         self.driver.get(URL)
 
-    def test_login(self):
+    def test_invalid_login(self):
         # Login to app with email
         email_login = self.driver.find_element(By.XPATH, '//input[@name="email"]')
         assert email_login.is_displayed(), "El textbox debe mostrarse"
