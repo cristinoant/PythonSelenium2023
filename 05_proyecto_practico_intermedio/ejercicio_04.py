@@ -17,13 +17,6 @@ class TestLaboratorioQAMinds:
         self.wait_driver = WebDriverWait(self.driver, 15)
 
     def test_validate_currency(self):
-        # Buscar boton Currency
-        currency_button = self.__find_clickable_element(By.XPATH, '//*[@id="form-currency"]//button')
-        currency_button.click()
-
-        # Seleccionar USD
-        currency_usd = self.__find_clickable_element(By.XPATH, '//button[@name="USD"]')
-        currency_usd.click()
 
         # Buscar Elemento Samsung
         search_box = self.__find_clickable_element(By.NAME, "search")
@@ -32,32 +25,35 @@ class TestLaboratorioQAMinds:
         search_box.send_keys("Samsung SyncMaster 941BW")
         search_box.send_keys(Keys.ENTER)
 
+        # Clic in element Samsung SyncMaster
+        element = self.__find_clickable_element(By.PARTIAL_LINK_TEXT, 'Samsung SyncMaster 941BW')
+        element.click()
+
+        # Find button Currency
+        currency_button = self.__find_clickable_element(By.XPATH, '//*[@id="form-currency"]//button/span')
+        currency_button.click()
+
+        # Select Currency USD
+        currency_usd = self.__find_clickable_element(By.XPATH, '//button[@name="USD"]')
+        currency_usd.click()
+
+        time.sleep(2)
+
         # Guardar el precio en USD
-        precio_usd = self.__find_by_text(By.XPATH, '//p[@class="price"][1]', '$242.00')
+        precio_usd = self.__find_visible_element(By.XPATH, '//h2[contains(text(), "$242.00")]').text
 
         # Buscar botton Currency
-        currency = self.driver.find_element(By.XPATH, '//*[@id="form-currency"]//button/span')
+        currency = self.__find_visible_element(By.XPATH, '//*[@id="form-currency"]//button/span')
         currency.click()
 
         # Seleccionar Euro
-        currency_euro = self.driver.find_element(By.XPATH, '//button[@name="EUR"]')
+        currency_euro = self.__find_visible_element(By.XPATH, '//button[@name="EUR"]')
         currency_euro.click()
 
-        # Guardar el precio en Euro
-        precio_euro = self.__find_by_text(By.XPATH, '//p[@class="price"][1]', '189.87€')
+        precio_euro = self.__find_visible_element(By.XPATH, '//h2[contains(text(), "189.87€")]').text
 
-        validate_precio_euro = self.driver.find_element(By.XPATH, '//p[@class="price"]').text
-
-        ##assert validate_wishlist == "Wish List (1)", "El texto debe ser > 0"
-
-
-
-        print("*****")
-        print(validate_precio_euro)
-        #print(precio_usd)
-        print("*****")
-
-        #time.sleep(3)
+        # Validate price elements USD is more expensive
+        assert precio_usd.replace("$", "") > precio_euro.replace("€", ""), "The price in USD should be expensive than Euro"
 
     def __find_clickable_element(self, by: By, value: str) -> WebElement:
         return self.wait_driver.until(EC.element_to_be_clickable((by, value)))
@@ -70,7 +66,6 @@ class TestLaboratorioQAMinds:
 
     def __wait_until_disappears(self, by: By, value: str):
         self.wait_driver.until(EC.invisibility_of_element((by, value)))
-
 
     def teardown(self):
         self.driver.quit()

@@ -1,49 +1,43 @@
-import pytest
-
-
 class CuentaBancaria:
 
-    def __init__(self, titular, saldo):
+    def __init__(self, titular: str, saldo: int):
         self.titular = titular
         self.saldo = saldo
 
-    def depositar(self, cantidad):
+    def depositar(self, cantidad: int):
         self.saldo += cantidad
 
-    def retirar(self, cantidad):
+    def retirar(self, cantidad: int):
         if cantidad > self.saldo:
             raise ValueError("No tienes suficiente saldo")
         self.saldo -= cantidad
 
     def consultar_saldo(self):
-        print(f"saldo {self.saldo}")
         return self.saldo
 
-    def teardown_method(self):
-        pass
+
+def test_consultar_saldo():
+    mi_cuenta = CuentaBancaria("Antonio", 5000)
+    resultado = mi_cuenta.consultar_saldo()
+    assert resultado == 5000, "El saldo inicial deberia ser 5000"
 
 
-class TestCuentaBancaria:
-
-    def setup_method(self):
-        self.cuenta = CuentaBancaria('Luis', 100)
-
-    def test_depositar(self):
-        self.cuenta.depositar(80)
-        assert self.cuenta.consultar_saldo() == 180, "El saldo debe ser 180 despues de depositar 80"
-
-    def test_retirar(self):
-        self.cuenta.retirar(50)
-        assert self.cuenta.consultar_saldo() == 50, "El saldo debe de ser 50 despues de retirar 50"
-
-    def test_retirar_insuficiente(self):
-        with pytest.raises(ValueError) as exc_info:
-            self.cuenta.retirar(1000)
+def test_depositar():
+    mi_cuenta = CuentaBancaria("Antonio", 5000)
+    mi_cuenta.depositar(1000)
+    resultado = mi_cuenta.consultar_saldo()
+    assert resultado == 6000, "El saldo final deberia ser 6000"
 
 
+def test_retirar():
+    mi_cuenta = CuentaBancaria("Antonio", 5000)
+    mi_cuenta.retirar(500)
+    resultado = mi_cuenta.consultar_saldo()
+    assert resultado == 4500, "El saldo final deberia ser 4500"
 
 
 
-        
+
+
 
 
